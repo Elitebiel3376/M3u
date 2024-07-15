@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentList = document.getElementById('content-list');
     const contentTitle = document.getElementById('content-title');
     
-    let channelsData = []; // Aqui você pode armazenar os dados dos canais
-    let moviesData = []; // Aqui você pode armazenar os dados dos filmes
-    let seriesData = []; // Aqui você pode armazenar os dados das séries
+    let channelsData = []; // Dados dos canais
+    let moviesData = []; // Dados dos filmes
+    let seriesData = []; // Dados das séries
     
     // Simulação de dados para demonstração
     channelsData = [
@@ -18,34 +18,35 @@ document.addEventListener('DOMContentLoaded', function() {
         { name: 'Record', logo: 'assets/channel-record.png' },
         { name: 'RedeTV!', logo: 'assets/channel-redetv.png' },
         { name: 'Band', logo: 'assets/channel-band.png' },
-        { name: 'MTV', logo: 'assets/channel-mtv.png' },
-        // Adicione mais canais conforme necessário
+        { name: 'MTV', logo: 'assets/channel-mtv.png' }
     ];
 
-    // Simulação de 1000 filmes
-    for (let i = 1; i <= 1000; i++) {
-        moviesData.push({ title: `Filme ${i}`, poster: `assets/movie-${i}.jpg` });
-    }
+    moviesData = [
+        { title: 'Filme 1', poster: 'assets/movie-1.jpg' },
+        { title: 'Filme 2', poster: 'assets/movie-2.jpg' },
+        { title: 'Filme 3', poster: 'assets/movie-3.jpg' }
+    ];
 
-    // Simulação de 1000 séries
-    for (let i = 1; i <= 1000; i++) {
-        seriesData.push({ title: `Série ${i}`, poster: `assets/series-${i}.jpg` });
-    }
+    seriesData = [
+        { title: 'Série 1', poster: 'assets/series-1.jpg' },
+        { title: 'Série 2', poster: 'assets/series-2.jpg' },
+        { title: 'Série 3', poster: 'assets/series-3.jpg' }
+    ];
 
     // Evento para enviar o link M3U
     m3uForm.addEventListener('submit', function(event) {
         event.preventDefault();
         const m3uUrl = m3uInput.value.trim();
         if (m3uUrl) {
-            // Simular lógica de validação e processamento do link M3U aqui
-            // Exemplo: carregar dados de canais, filmes, séries, etc.
-            showMainScreen(); // Mostrar tela principal após processamento do link M3U
+            // Simular redirecionamento para o link M3U
+            window.location.href = m3uUrl;
+        } else {
+            alert('Por favor, insira um link M3U válido.');
         }
     });
 
     // Mostrar tela principal com opções de categorias
     function showMainScreen() {
-        m3uScreen.style.display = 'none';
         mainScreen.style.display = 'block';
     }
 
