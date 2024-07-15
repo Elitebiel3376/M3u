@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentTitle = document.getElementById('content-title');
     
     let channelsData = []; // Dados dos canais
+    let moviesData = []; // Dados dos filmes
 
     // Evento para enviar o link M3U
     m3uForm.addEventListener('submit', function(event) {
@@ -22,12 +23,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Função para carregar canais a partir do link M3U
     function loadChannelsFromM3U(m3uUrl) {
-        // Aqui você pode implementar a lógica para carregar os dados dos canais do link M3U
         fetch(m3uUrl)
             .then(response => response.text())
             .then(data => {
-                channelsData = parseM3U(data); // Função para analisar o conteúdo do M3U e extrair os canais
-                showMainScreen();
+                channelsData = parseM3U(data);
+                if (channelsData.length > 0) {
+                    // Carregar dados de filmes (simulação)
+                    loadMoviesData();
+                    showMainScreen();
+                } else {
+                    alert('Não foi possível carregar os canais do M3U.');
+                }
             })
             .catch(error => {
                 console.error('Erro ao carregar dados do M3U:', error);
@@ -38,23 +44,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Função para analisar o conteúdo do M3U e extrair os canais
     function parseM3U(m3uContent) {
         const channels = [];
-        // Exemplo simples de análise de um M3U básico
         const lines = m3uContent.split('\n');
         let currentChannel = {};
+
         lines.forEach(line => {
+            line = line.trim();
             if (line.startsWith('#EXTINF:')) {
-                // Extrair informações do canal
                 const parts = line.split(',');
                 const title = parts[1];
                 currentChannel = { name: title };
-            } else if (line.startsWith('http')) {
-                // URL do canal
+            } else if (line.startsWith('http') || line.startsWith('https')) {
                 currentChannel.url = line.trim();
                 channels.push(currentChannel);
                 currentChannel = {};
             }
         });
         return channels;
+    }
+
+    // Simulação de carregamento de dados de filmes
+    function loadMoviesData() {
+        // Simulação de 100 filmes
+        for (let i = 1; i <= 100; i++) {
+            moviesData.push({ title: `Filme ${i}`, poster: `assets/movie-${i}.jpg` });
+        }
     }
 
     // Mostrar tela principal com os canais
@@ -72,8 +85,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Limpar qualquer conteúdo anterior
         contentList.innerHTML = '';
         
-        // Aqui você pode adicionar lógica para outras categorias se necessário
+        // Renderizar conteúdo com base na categoria
         switch (category) {
+            case 'movies':
+                renderContent(moviesData, 'Filmes');
+                break;
+            // Adicione outros casos conforme necessário para outras categorias
             default:
                 break;
         }
@@ -84,10 +101,10 @@ document.addEventListener('DOMContentLoaded', function() {
         contentTitle.textContent = title;
         data.forEach(item => {
             const element = document.createElement('div');
-            element.innerHTML = `<p>${item.name}</p>`;
+            element.innerHTML = `<p>${item.name || item.title}</p>`;
             element.addEventListener('click', function() {
-                // Lógica para o que acontece quando o usuário clica em um canal
-                alert(`Você clicou em ${item.name}`);
+                // Lógica para o que acontece quando o usuário clica em um item
+                alert(`Você clicou em ${item.name || item.title}`);
             });
             contentList.appendChild(element);
         });
@@ -97,6 +114,19 @@ document.addEventListener('DOMContentLoaded', function() {
     backButton.addEventListener('click', function() {
         contentScreen.style.display = 'none';
         mainScreen.style.display = 'block';
+    });
+
+    // Event listeners para clicar nas opções (Canais, Filmes, Séries)
+    document.getElementById('channels').addEventListener('click', function() {
+        showMainScreen();
+    });
+
+    document.getElementById('movies').addEventListener('click', function() {
+        showContentScreen('movies');
+    });
+
+    document.getElementById('series').addEventListener('click', function() {
+        showContentScreen('series');
     });
 
     // Inicialização: mostrar tela principal ao carregar
