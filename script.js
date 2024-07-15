@@ -8,46 +8,60 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentTitle = document.getElementById('content-title');
     
     let channelsData = []; // Dados dos canais
-    let moviesData = []; // Dados dos filmes
-    let seriesData = []; // Dados das séries
-    
-    // Simulação de dados para demonstração
-    channelsData = [
-        { name: 'Globo', logo: 'assets/channel-globo.png' },
-        { name: 'SBT', logo: 'assets/channel-sbt.png' },
-        { name: 'Record', logo: 'assets/channel-record.png' },
-        { name: 'RedeTV!', logo: 'assets/channel-redetv.png' },
-        { name: 'Band', logo: 'assets/channel-band.png' },
-        { name: 'MTV', logo: 'assets/channel-mtv.png' }
-    ];
-
-    moviesData = [
-        { title: 'Filme 1', poster: 'assets/movie-1.jpg' },
-        { title: 'Filme 2', poster: 'assets/movie-2.jpg' },
-        { title: 'Filme 3', poster: 'assets/movie-3.jpg' }
-    ];
-
-    seriesData = [
-        { title: 'Série 1', poster: 'assets/series-1.jpg' },
-        { title: 'Série 2', poster: 'assets/series-2.jpg' },
-        { title: 'Série 3', poster: 'assets/series-3.jpg' }
-    ];
 
     // Evento para enviar o link M3U
     m3uForm.addEventListener('submit', function(event) {
         event.preventDefault();
         const m3uUrl = m3uInput.value.trim();
         if (m3uUrl) {
-            // Simular redirecionamento para o link M3U
-            window.location.href = m3uUrl;
+            loadChannelsFromM3U(m3uUrl);
         } else {
             alert('Por favor, insira um link M3U válido.');
         }
     });
 
-    // Mostrar tela principal com opções de categorias
+    // Função para carregar canais a partir do link M3U
+    function loadChannelsFromM3U(m3uUrl) {
+        // Aqui você pode implementar a lógica para carregar os dados dos canais do link M3U
+        fetch(m3uUrl)
+            .then(response => response.text())
+            .then(data => {
+                channelsData = parseM3U(data); // Função para analisar o conteúdo do M3U e extrair os canais
+                showMainScreen();
+            })
+            .catch(error => {
+                console.error('Erro ao carregar dados do M3U:', error);
+                alert('Não foi possível carregar os dados do M3U. Verifique o link e tente novamente.');
+            });
+    }
+
+    // Função para analisar o conteúdo do M3U e extrair os canais
+    function parseM3U(m3uContent) {
+        const channels = [];
+        // Exemplo simples de análise de um M3U básico
+        const lines = m3uContent.split('\n');
+        let currentChannel = {};
+        lines.forEach(line => {
+            if (line.startsWith('#EXTINF:')) {
+                // Extrair informações do canal
+                const parts = line.split(',');
+                const title = parts[1];
+                currentChannel = { name: title };
+            } else if (line.startsWith('http')) {
+                // URL do canal
+                currentChannel.url = line.trim();
+                channels.push(currentChannel);
+                currentChannel = {};
+            }
+        });
+        return channels;
+    }
+
+    // Mostrar tela principal com os canais
     function showMainScreen() {
         mainScreen.style.display = 'block';
+        contentScreen.style.display = 'none';
+        renderContent(channelsData, 'Canais');
     }
 
     // Mostrar tela de conteúdo com base na categoria selecionada
@@ -58,16 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Limpar qualquer conteúdo anterior
         contentList.innerHTML = '';
         
+        // Aqui você pode adicionar lógica para outras categorias se necessário
         switch (category) {
-            case 'channels':
-                renderContent(channelsData, 'Canais');
-                break;
-            case 'movies':
-                renderContent(moviesData, 'Filmes');
-                break;
-            case 'series':
-                renderContent(seriesData, 'Séries');
-                break;
             default:
                 break;
         }
@@ -78,11 +84,10 @@ document.addEventListener('DOMContentLoaded', function() {
         contentTitle.textContent = title;
         data.forEach(item => {
             const element = document.createElement('div');
-            element.innerHTML = `<img src="${item.logo || item.poster}" alt="${item.name || item.title}">
-                                <p>${item.name || item.title}</p>`;
+            element.innerHTML = `<p>${item.name}</p>`;
             element.addEventListener('click', function() {
-                // Lógica para o que acontece quando o usuário clica em um item
-                alert(`Você clicou em ${item.name || item.title}`);
+                // Lógica para o que acontece quando o usuário clica em um canal
+                alert(`Você clicou em ${item.name}`);
             });
             contentList.appendChild(element);
         });
@@ -94,17 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mainScreen.style.display = 'block';
     });
 
-    // Event listeners para clicar nas opções (Canais, Filmes, Séries)
-    document.getElementById('channels').addEventListener('click', function() {
-        showContentScreen('channels');
-    });
-
-    document.getElementById('movies').addEventListener('click', function() {
-        showContentScreen('movies');
-    });
-
-    document.getElementById('series').addEventListener('click', function() {
-        showContentScreen('series');
-    });
-
+    // Inicialização: mostrar tela principal ao carregar
+    showMainScreen();
 });
