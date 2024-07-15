@@ -1,0 +1,17 @@
+{
+  "id": "com.example.iptvapp",
+  "version": "1.0.0",
+  "title": "IPTV App",
+  "main": "index.html",
+  "icon": "assets/icon.png",
+  "largeIcon": "assets/large-icon.png",
+  "type": "web",
+  "categories": [
+    "IPTV",
+    "Entertainment"
+  ],
+  "developer": {
+    "name": "Gabriel Azevedo",
+    "email": "gabrielfelipe1036@gmail.com"
+  }
+}

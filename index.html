@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPTV App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Tela para inserção do link M3U -->
+    <div class="container" id="m3u-screen">
+        <h1>Insira o Link M3U</h1>
+        <form id="m3uForm">
+            <label for="m3u">Link M3U:</label>
+            <input type="url" id="m3u" name="m3u" required>
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+
+    <!-- Tela principal: escolha de categoria -->
+    <div class="container" id="main-screen" style="display: none;">
+        <h1>Escolha uma Categoria</h1>
+        <div class="options">
+            <div class="option" id="channels">
+                <img src="assets/channels-logo.png" alt="Canais">
+                <p>Canais</p>
+            </div>
+            <div class="option" id="movies">
+                <img src="assets/movies-logo.png" alt="Filmes">
+                <p>Filmes</p>
+            </div>
+            <div class="option" id="series">
+                <img src="assets/series-logo.png" alt="Séries">
+                <p>Séries</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de conteúdo: exibição de categorias -->
+    <div class="container" id="content-screen" style="display: none;">
+        <h1 id="content-title"></h1>
+        <div id="content-list"></div>
+        <button id="back-button">Voltar</button>
+    </div>
+
+    <!-- Script JavaScript para funcionalidades do aplicativo -->
+    <script src="script.js"></script>
+</body>
+</html>
